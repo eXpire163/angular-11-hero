@@ -13,16 +13,26 @@ export class HeroesComponent implements OnInit {
 
   heroes: Hero[] = []
 
-  hero: Hero = {
-    id: 1,
-    name: 'Windstorm'
-  };
 
   constructor(private heroService: HeroService, private messageService: MessageService) { }
 
   getHeroes(): void {
     this.heroService.getHeroes().subscribe(hs => this.heroes = hs)
 
+  }
+
+  add(name: string): void {
+    name = name.trim();
+    if (!name) { return; }
+    this.heroService.addHero({ name } as Hero)
+      .subscribe(hero => {
+        this.heroes.push(hero);
+      });
+  }
+
+  delete(hero: Hero): void {
+    this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero).subscribe();
   }
 
 
